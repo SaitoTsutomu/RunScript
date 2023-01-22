@@ -26,7 +26,7 @@ class CDO_OT_run_script(bpy.types.Operator):
             areas = [a for a in scr.areas if a.type == "TEXT_EDITOR"]
             if areas:
                 areas[0].spaces[0].text = txt
-        exec(file.read_text())
+        exec(file.read_text(), globals(), globals())
         return {"FINISHED"}
 
 
