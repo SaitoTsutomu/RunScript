@@ -5,6 +5,21 @@ import bpy
 from .register_class import _get_cls, operator
 
 
+def execfile(file, globals=None, locals=None):
+    pth = Path(file)
+    if not pth.is_file():
+        return False
+    if txt := bpy.data.texts.get(pth.name):
+        bpy.data.texts.remove(txt)
+    txt = bpy.data.texts.load(str(pth))
+    if scr := bpy.data.screens.get("Scripting"):
+        areas = [a for a in scr.areas if a.type == "TEXT_EDITOR"]
+        if areas:
+            areas[0].spaces[0].text = txt
+    exec(pth.read_text(), globals, locals)
+    return True
+
+
 class CDO_OT_run_script(bpy.types.Operator):
     """2つのオブジェクトの異なる点を選択"""
 
@@ -15,18 +30,9 @@ class CDO_OT_run_script(bpy.types.Operator):
     file: bpy.props.StringProperty() = bpy.props.StringProperty()  # type: ignore
 
     def execute(self, context):
-        file = Path(self.file)
-        if not file.is_file():
+        if not execfile(self.file):
             self.report({"WARNING"}, "Set file name.")
             return {"CANCELLED"}
-        if txt := bpy.data.texts.get(file.name):
-            bpy.data.texts.remove(txt)
-        txt = bpy.data.texts.load(str(file))
-        if scr := bpy.data.screens.get("Scripting"):
-            areas = [a for a in scr.areas if a.type == "TEXT_EDITOR"]
-            if areas:
-                areas[0].spaces[0].text = txt
-        exec(file.read_text(), globals(), globals())
         return {"FINISHED"}
 
 

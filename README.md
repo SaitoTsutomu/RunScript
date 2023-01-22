@@ -17,3 +17,10 @@ Execute the specified script file.
 - Show the sidebar and select the Edit tab.
 - Specify a file name.
 - Press "Run Script".
+
+In Python console, execute as follows to reflect the global variables.
+
+```
+execfile = __import__("RunScript-master").execfile
+execfile(<file name>, globals())
+```
