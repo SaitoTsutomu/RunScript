@@ -1,19 +1,19 @@
-## Blender Add-on: DiffObj
+## Blender Add-on: RunScript
 
-Select the different vertices of 2 objects.
+Execute the specified script file.
 
 ## Installation
 
-- Download https://github.com/SaitoTsutomu/DiffObj/archive/refs/heads/master.zip
+- Download https://github.com/SaitoTsutomu/RunScript/archive/refs/heads/master.zip
 - Start Blender.
 - Edit menu -> Preferences
   - Select the "Add-ons" tab.
   - Press the "Install ...".
   - Select the downloaded ZIP file and press the button "Install Add-on".
-  - Check the "Object: DiffObj".
+  - Check the "Object: RunScript".
 
 ## Usage
 
-- Select two objects.
 - Show the sidebar and select the Edit tab.
-- Push "Select Diff 2 Obj".
+- Specify a file name.
+- Press "Run Script".
