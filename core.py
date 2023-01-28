@@ -5,7 +5,7 @@ import bpy
 from .register_class import _get_cls, operator
 
 
-def execfile(file, globals=None, locals=None):
+def execfile(file, globals_=None, locals_=None):
     pth = Path(file)
     if not pth.is_file():
         return False
@@ -16,7 +16,7 @@ def execfile(file, globals=None, locals=None):
         areas = [a for a in scr.areas if a.type == "TEXT_EDITOR"]
         if areas:
             areas[0].spaces[0].text = txt
-    exec(pth.read_text(), globals, locals)
+    exec(pth.read_text(), globals_, locals_)
     return True
 
 
@@ -28,9 +28,11 @@ class CDO_OT_run_script(bpy.types.Operator):
     bl_description = "Execute the specified script file."
 
     file: bpy.props.StringProperty() = bpy.props.StringProperty()  # type: ignore
+    use_global: bpy.props.BoolProperty() = bpy.props.BoolProperty()  # type: ignore
 
     def execute(self, context):
-        if not execfile(self.file):
+        globals_ = globals() if self.use_global else None
+        if not execfile(self.file, globals_):
             self.report({"WARNING"}, "Set file name.")
             return {"CANCELLED"}
         return {"FINISHED"}
@@ -44,8 +46,10 @@ class CDO_PT_bit(bpy.types.Panel):
 
     def draw(self, context):
         self.layout.prop(context.scene, "file", text="File")
+        self.layout.prop(context.scene, "use_global", text="UseGlobal")
         prop = operator(self.layout, CDO_OT_run_script)
         prop.file = context.scene.file
+        prop.use_global = context.scene.use_global
 
 
 # core.py内のOperatorクラスとPanelクラス
